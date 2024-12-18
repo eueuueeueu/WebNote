@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+
+<body>
+  <div class="brother">我是哥哥</div>
+  <div>我是弟弟
+    <p>我是儿子</p>
+  </div>
+</body>
+<script>
+let brother =document.querySelector('.brother')
+let youngerBrother = brother.previousElementSibling.firstChild
+console.log(brother);
+console.log(youngerBrother);
+
+
+</script>
+
+</html>
