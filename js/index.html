@@ -8,18 +8,18 @@
 </head>
 
 <body>
-  <div class="brother">我是哥哥</div>
-  <div>我是弟弟
-    <p>我是儿子</p>
-  </div>
 </body>
 <script>
-let brother =document.querySelector('.brother')
-let youngerBrother = brother.previousElementSibling.firstChild
-console.log(brother);
-console.log(youngerBrother);
-
-
+  let obj = {
+    name: 'zhangsan',
+    age: 18,
+    height: 1.88
+  }
+  let obj2 = JSON.parse(JSON.stringify(obj))
+  obj2.name = 'lisi'
+  console.log(obj2)// { name: 'lisi', age: 18, height: 1.88 }
+  console.log(obj)// { name: 'zhangsan', age: 18, height: 1.88 }
+  
 </script>
 
 </html>
