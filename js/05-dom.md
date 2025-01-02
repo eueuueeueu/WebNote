@@ -52,7 +52,7 @@ console.log(div,aDiv,bDiv,divAll,cDivAll,eDivAll);
 
 > 返回节点的父节点
 
-#### childNodes
+#### children
 
 > 返回子节点集合，childNodes[i]
 
@@ -90,7 +90,9 @@ console.log(div,aDiv,bDiv,divAll,cDivAll,eDivAll);
 
 > 返回节点的上一个节点，包含元素节点和文本节点，所以会输出#text
 
+#### childNodes
 
+> 返回子节点集合，元素节点和文本节点，所以会输出#text
 
 
 

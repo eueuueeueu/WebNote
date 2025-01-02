@@ -5,21 +5,38 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
+  <style>
+    div {
+      width: 100px;
+      height: 100px;
+      background-color: red;
+    }
+  </style>
 </head>
 
 <body>
+  <div></div>
 </body>
 <script>
-  let obj = {
-    name: 'zhangsan',
-    age: 18,
-    height: 1.88
+  var div = document.querySelector('div');
+  var res = 0;
+  setTimeout(function () {
+    //如何让动画不卡顿 提示:web worker
+    for (var i = 0; i < 20000000000; i++) {
+      res += i;
+    }
+  }, 2000);
+  var i = 0;
+  function animation() {
+    // 注册一个事件(事件的回调函数总是在主线程执行渲染任务前执行)
+    requestAnimationFrame(function () {
+      i++;
+      div.style.left = `${i} px`;
+      animation();
+    });
   }
-  let obj2 = JSON.parse(JSON.stringify(obj))
-  obj2.name = 'lisi'
-  console.log(obj2)// { name: 'lisi', age: 18, height: 1.88 }
-  console.log(obj)// { name: 'zhangsan', age: 18, height: 1.88 }
-  
+  animation();
+
 </script>
 
 </html>
