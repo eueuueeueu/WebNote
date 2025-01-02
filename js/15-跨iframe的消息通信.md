@@ -139,13 +139,13 @@
 ```
 
 ```js
-  let child = document.querySelector('#child')
-  let messageSpan = document.querySelector('#message')
-  window.onload = function () {
-    child.contentWindow.postMessage("主页面消息", "http://127.0.0.1:5500/03-iframe(postMessage)/child.html")
-  }
   window.addEventListener('message', function (event) {
-    messageSpan.innerHTML = "收到" + event.origin + "消息：" + event.data;
+    if (window.parent !== event.source) return
+    console.log(event);
+    document.getElementById('message').innerHTML = "收到" + event.origin + "消息：" + event.data;
+    // 在iframe本页面，要操作这个iframe的父页面的DOM元素（即嵌套这个iframe的页面）可以用：
+    // window.parent、window.top(这里的TOP是获取的顶层，即有多层嵌套iframe的时候使用)
+    top.postMessage("子页面消息收到", 'http://127.0.0.1:5500/03-iframe(postMessage)/parent.html')
   });
 ```
 
@@ -190,7 +190,9 @@
     if (window.parent !== event.source) return
     console.log(event);
     document.getElementById('message').innerHTML = "收到" + event.origin + "消息：" + event.data;
-    top.postMessage("子页面消息收到", 'http://127.0.0.1:5500/03-iframe(postMessage)%20copy/parent.html')
+    // 在iframe本页面，要操作这个iframe的父页面的DOM元素（即嵌套这个iframe的页面）可以用：
+    // window.parent、window.top(这里的TOP是获取的顶层，即有多层嵌套iframe的时候使用)
+    top.postMessage("子页面消息收到", 'http://127.0.0.1:5500/03-iframe(postMessage)%20copy/child.html')
   });
 ```
 
