@@ -321,7 +321,9 @@
 
 > 这一步我们已经做了
 >
-> <pre><code class="language-js">...</code></pre>
+> <pre class="parent" style="position: relative;">
+>     <code class="language-js"></code>
+> </pre>
 
 ##### 第二步：引入文件
 
@@ -630,7 +632,7 @@ hljs.highlightAll()
 
 **效果展示**
 
-![73581463414](D:\WebClass\note\js\images\16\13.png)
+<img src='./images/16/13.png'>
 
 ------------------------
 
