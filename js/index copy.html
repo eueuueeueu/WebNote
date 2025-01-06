@@ -19,8 +19,10 @@
 </body>
 <script>
   var el = document.querySelector('div');
-  for(let i=0;i<5000000000;i++){}
-  el.style.display='none'
+  setTimeout(() => {
+    // for (let i = 0; i < 5000000000; i++) { }
+    el.style.display = 'none';
+  }, 0);
 </script>
 
 </html>
