@@ -96,29 +96,13 @@ console.log(div,aDiv,bDiv,divAll,cDivAll,eDivAll);
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 ## 二、js事件
 
 > addEventListener()	给元素添加事件
 >
 > removeEventListener()	删除使用 addEventListener() 方法添加的事件
+
+
 
 ### 1、鼠标事件
 
@@ -210,5 +194,10 @@ console.log(div,aDiv,bDiv,divAll,cDivAll,eDivAll);
 
 
 
+## 三、补充
 
+#### 获取元素的坐标
 
+<img src='./images/05/03.png'>
+
+<img src='./images/05/02.png'>
