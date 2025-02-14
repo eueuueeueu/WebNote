@@ -20,7 +20,7 @@
 ```js
   // parent.js
   let channel = new MessageChannel()
-  // let port1 = channel.port1  ！！！let定义的变量不在window上面
+  // let port1 = channel.port1  ！！！let定义的变量不在window上面         或者直接使用window.port1 = channel.port1
   // let port2 = channel.port2  ！！！let定义的变量不在window上面
   var port1 = channel.port1
   var port2 = channel.port2
