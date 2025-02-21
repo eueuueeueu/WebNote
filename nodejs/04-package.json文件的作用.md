@@ -82,7 +82,17 @@
 >
 > 使用npm install 包名 --save-dev命令将包添加到package.json文件的devDependencies字段中。
 
+### "bin"
 
+> 用于定义可执行文件，通常用于创建命令行工具。
+
+```json
+  "bin": {
+    "en": "./toLanguage/to_en.js",
+    "zh": "./toLanguage/to_zh.js",
+    "cht": "./toLanguage/to_cht.js"
+  },
+```
 
 
 
