@@ -220,19 +220,70 @@ function f1(a: number, b: number): number {
 let f2: (x: number, y: number) => number = function (a, b) {
   return a + b
 }
-// 3.定义类型
+// 2.定义类型
 type F3 = (x: number, y: number) => number
 let f3: F3 = function (a, b) {
   return a + b
 }
-// 3.定义类型
+// 2.定义类型
 type F4 = (...args: [number, number]) => number
 let f4: F4 = function (a, b) {
   return a + b
 }
+// 3.使用接口来定义函数类型(了解)
+interface F5 {
+  (a: number, b: number): number
+}
+type F55 = {
+  (a: number, b: number): number
+}
+let f5: F5 = (a, b) => a + b
+let f55: F55 = (a, b) => a + b
+
+
+function echo(): void {//返回值为空
+  alert('')
+}
 ```
 
+##### `函数的重载`
 
+需求：需要实现一个函数reverse,输入数字123的时候，输出反转的数字321，输入字符串'hello'的时候，输出反转的字符串'olleh'
+
+```typescript
+// 如果写成这样
+type ReverseType = (value: string | number) => string | number
+const reverse: ReverseType = (data) => {
+  if (typeof data === 'string') {
+    return data.split('').reverse().join('')
+  }
+  return Number(data.toString().split('').reverse().join(''))
+}
+reverse(123)
+```
+
+如果是这样，不符合题目要求，输入数字的时候，可能返回数字或字符串，输入字符串的时候，也可能返回数字或字符串
+
+而且，我们发现reverse(123)的返回值应该是number类型的方法居然只有三个，他们是number和string共有的方法，显然这不正确
+
+<img src='./images/01/06.png'>
+
+`正确写法`
+
+```typescript
+// 重复定义多次函数的类型，最后一次是函数的实现
+function reverse(data: string): string
+function reverse(data: number): number
+function reverse(data: string | number): number | string {
+  if (typeof data === 'string') {
+    return data.split('').reverse().join('')
+  }
+  return Number(data.toString().split('').reverse().join(''))
+}
+reverse(123)
+```
+
+<img src='./images/01/07.png'>
 
 ## 类型？？集合？？
 
