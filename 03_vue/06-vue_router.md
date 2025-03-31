@@ -175,11 +175,85 @@ const onLogin = () => {
 
 
 
+以下笔记以ts为基础
+
+------------------------
+
+## 带参数的静态路由匹配(vueRouter的两种传参方式)
+
+### 初始化
+
+初始化一个vue+vite+ts的项目
+
+```powershell
+```
 
 
 
+### 1、路径参数
 
+```typescript
+import type { RouteRecordRaw } from 'vue-router'
+import Index from '../views/Index.vue'
+import About from '../views/About.vue'
+import Mine from '../views/Mine.vue'
 
+const router: RouteRecordRaw[] = [
+  // 路由重定向
+  {
+    path: '/',
+    redirect: '/index',
+  },
+  {
+    path: '/index',
+    component: Index,
+  },
+  // 在routes.ts上通过:key配置
+  {
+    path: '/about/:id/:uid',
+    component: About,
+  },
+  {
+    path: '/mine',
+    component: Mine,
+  },
+]
+
+export default router
+
+```
+
+```vue
+<template>
+  <div>index</div>
+  <!-- 两种写法，在路径上都是：/about/123/345 -->
+  <RouterLink to="/about/123/345">to About</RouterLink>
+  <RouterLink :to="{ path: '/about/123/345' }">to About</RouterLink>
+</template>
+<script setup lang="ts"></script>
+```
+
+### 2、query参数
+
+```vue
+<template>
+  <div>about</div>
+  <!-- 三种写法，在路径上都是：/mine?bar=1&baz=2 -->
+  <RouterLink :to="{ path: '/mine', query: { bar: 1, baz: 2 } }"
+    >to Mine</RouterLink
+  >
+  <RouterLink :to="'/mine?bar&baz=2'">to Mine</RouterLink>
+  <RouterLink :to="{ path: '/mine?bar&baz=2' }">to Mine</RouterLink>
+</template>
+<script setup lang="ts">
+import { useRouter } from 'vue-router'
+const router = useRouter()
+console.log(router.currentRoute.value.params)
+const f1 = () => router.push('/mine?bar&baz=2')
+const f2 = () => router.push({ path: '/mine', query: { bar: 1, baz: 2 } })
+const f3 = () => router.push({ path: '/mine?bar&baz=2' })
+</script>
+```
 
 
 

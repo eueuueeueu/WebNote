@@ -2,7 +2,7 @@
 
 ## 初始化
 
-初始化一个vue+vite+ts的项目`pnpm create vite 项目名称 --template vue-ts`
+初始化一个`vue+vite+ts`的项目`pnpm create vite 项目名称 --template vue-ts`
 
 ```powershell
 pnpm create vite test --template vue-ts
