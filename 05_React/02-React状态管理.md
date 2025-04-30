@@ -612,7 +612,7 @@ const countArrReducer = (countArr: number[], action: Action) => {
         draft.length = 0;
       });
     default:
-      return countArr; // 一定要给默认返回，否则报错
+      return countArr; // 如果 reducer 不关心这个action type，原样返回现有状态
   }
 };
 export default countArrReducer;
@@ -621,7 +621,7 @@ export default countArrReducer;
 
 
 
-## 状态管理库
+## 状态管理库(redux)
 
 ### redux
 
@@ -643,38 +643,13 @@ pnpm add react-redux redux redux-shunk
 
 准备工作：定义目录
 
-`src`下新建store用来管理状态；在store中新建index.ts用来集中引入状态仓库，创建store；在store中新建reducers文件夹，用来存放状态仓库。
+`src`下新建store用来管理状态；在store中新建index.ts用来集中管理状态仓库，创建store；在store中新建reducers文件夹，用来存放状态仓库。
 
 <img src='./images/02/03.png'>
 
-#### 第一步：使用`redux`引入仓库,创建store
+#### 第一步：编写`redux`
 
-`src/store/index`
-
-```ts
-/**
- * redux 为所有UI框架提供状态管理服务 哪怕是原生JS也可以
- * react + [state lib] redux/zustand/mobx...
- * react + react-redux + redux + redux-thunk
- */
-import { legacy_createStore as createStore, combineReducers } from "redux";
-import count from "./reducers/count";
-// import todo from "./reducers/todo";
-// import user from "./reducers/user";
-
-const rootReducer = combineReducers({
-  count,
-  // todo,
-  // user,
-});
-
-const store = createStore(rootReducer);
-
-export type RootState = ReturnType<typeof store.getState>;
-export type AppDispatch = typeof store.dispatch;
-
-export default store;
-```
+**reducer 通常被拆分为多个较小的 reducer 函数**的 - 以便更容易理解和维护 reducer 逻辑。原因请看[Redux 深入浅出， 第三节: State， Actions， 和 Reducers | Redux 中文官网](https://cn.redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers#编写-reducers)，简而言之，不分开写，count/todo/user写在一起后期会非常的难以维护
 
 在src/store下新建reduce文件夹用来专门存放状态，创建count.ts、todo.ts、user.ts
 
@@ -701,15 +676,91 @@ const count = (state: number = 0, action: Action) => {
 export default count;
 ```
 
-#### 第二步：使用`react-redux`全局共享状态
+`todo.ts`
+
+```ts
+type Action = {
+  type: "COUNT/INCREASE" | "COUNT/DECREASE" | "COUNT/RESET";
+};
+const count = (state: number = 0, action: Action) => {
+  switch (action.type) {
+    case "COUNT/INCREASE":
+      return state + 1;
+    case "COUNT/DECREASE":
+      return state - 1;
+    case "COUNT/RESET":
+      return 0;
+    default:
+      return state;
+  }
+};
+
+export default count;
+```
+
+`user.ts`
+
+```ts
+type Action = {
+  type: "USER/PERSON" | "USER/UNIT";
+};
+const count = (state: number = 0, action: Action) => {
+  switch (action.type) {
+    case "USER/PERSON":
+      return state + 1;
+    case "USER/UNIT":
+      return state + 10;
+    default:
+      return state;
+  }
+};
+
+export default count;
+```
+
+#### 第二步：store
+
+引入前面编写的`redux`函数，使用`combineReducers`函数合并被拆分的`redux`，使用`legacy_createStore`函数创建`store`
+
+`src/store/index`
+
+```ts
+/**
+ * redux 为所有UI框架提供状态管理服务 哪怕是原生JS也可以
+ * react + [state lib] redux/zustand/mobx...
+ * react + react-redux + redux + redux-thunk
+ */
+import { legacy_createStore as createStore, combineReducers } from "redux";
+import count from "./reducers/count";
+import todo from "./reducers/todo";
+import user from "./reducers/user";
+
+// 将reducer后，如何合并，使用redux内置的combineReducers函数，详情查看https://cn.redux.js.org/tutorials/fundamentals/part-3-state-actions-reducers/#%E6%8B%86%E5%88%86-reducers
+const rootReducer = combineReducers({
+  count,
+  todo,
+  user,
+});
+
+const store = createStore(rootReducer);
+
+// 导出state的类型，便于其他文件要：state.count/state.todo/state.user 取数据
+export type RootState = ReturnType<typeof store.getState>;
+// 导出dispatch的类型，便于其他文件要 dispatch({ type: "INCREASE" }); dispatch传参更新状态
+export type AppDispatch = typeof store.dispatch;
+
+export default store;
+```
+
+#### 第二步：使用`Provider`全局共享状态
 
 在`src/main.tsx`中
 
 ```tsx
 import { createRoot } from "react-dom/client";
-// 引入react-redux的Provider
+// 引入react-redux的Provider--------------
 import { Provider } from "react-redux";
-// 引入store
+// 引入store-----------------
 import store from "./store/index.ts";
 import "./index.css";
 import App from "./App.tsx";
@@ -722,7 +773,7 @@ createRoot(document.getElementById("root")!).render(
 );
 ```
 
-#### 第三步：使用`react-redux`查看并操作状态
+#### 第三步：使用`useSelector/useDispatch`查看并操作状态
 
 在`src/component`中新建`Bar.tsx`，在App.vue中引入他
 
@@ -740,7 +791,7 @@ const App: FC = () => {
 export default App;
 ```
 
-使用`useSelector`来拿到所有模块的数据，使用useDispatch来初始化一个修改的工具
+使用`useSelector`函数来拿到所有模块的数据，可以按需返回对应模块的数据，使用`useDispatch`函数来初始化一个dispatch修改的工具
 
 `Bar.tsx`
 
@@ -843,5 +894,152 @@ export default Bar;
 
 > 目前：我们现在的状态管理不能作异步操作，需要用到(redux-thunk或redux-saga)
 
-### 异步的状态更新`redux-thunk`
+### enhancer和middleware——增强器和中间件
+
+#### enhancer
+
+一个增强器，是`legacy_createStore`的第三个参数，用来给`store`提供更多的功能，使用`redux`中的`applyMiddleware`方法来集成中间件为store添加功能。
+
+#### meddleware
+
+##### `redux-logger`添加日志中间件(开发环境)
+
+`下载使用`
+
+```powershell
+pnpm add redux-logger
+pnpm add @types/redux-logger
+```
+
+```ts
+// 引入redux-logger来创建日志
+import { createLogger } from "redux-logger";
+// 引入applyMiddleware将中间件转化为增强器供store使用
+import { legacy_createStore as createStore, applyMiddleware } from "redux";
+```
+
+`添加中间件`
+
+```ts
+import { legacy_createStore as createStore, applyMiddleware } from "redux";
+import { TypedUseSelectorHook, useDispatch, useSelector } from "react-redux";
+import { createLogger } from "redux-logger";
+import { rootReducer } from "./rootReducer.ts";
+
+const loggerMiddleWare = createLogger();
+// 集成中间件为增强器
+const enhancer = applyMiddleware(loggerMiddleWare);
+
+// createStore(reducer,初始值,中间件)
+export const store = createStore(rootReducer, undefined, enhancer);
+
+type RootState = ReturnType<typeof store.getState>;
+type AppDispatch = () => typeof store.dispatch;
+
+export const useAppSelector: TypedUseSelectorHook<RootState> = useSelector;
+export const useAppDispatch: AppDispatch = useDispatch;
+```
+
+`效果`<img src='./images/02/06.png'>
+
+-------------------
+
+##### `redux-thunk`异步状态更新中间件(生产环境)
+
+> “thunk”这个词是一个编程术语，意思是 [“一段代码，用于执行一些延迟的工作”](https://en.wikipedia.org/wiki/Thunk)。与其现在执行一些逻辑，不如编写一个函数体或代码，以便以后执行工作。
+>
+> Thunk 是 [在 Redux 应用程序中编写异步逻辑的标准方法](https://redux.js.cn/style-guide/#use-thunks-and-listeners-for-other-async-logic)，通常用于数据获取。但是，它们可以用于各种任务，并且可以包含同步和异步逻辑。
+
+使用 thunk 需要将 [`redux-thunk` 中间件](https://github.com/reduxjs/redux-thunk) 添加到 Redux 存储，作为其配置的一部分。
+
+```powershell
+pnpm add redux-thunk
+```
+
+```ts
+import { thunk } from "redux-thunk";
+import {
+  legacy_createStore as createStore,
+  applyMiddleware,
+  Middleware,
+} from "redux";
+const middleware: Middleware[] = [thunk]; // thunk异步状态更新中间件 为生产环境，直接放进去
+if (import.meta.env.DEV) {
+    // ...
+}
+const enhancer = applyMiddleware(...middleware);
+export const store = createStore(rootReducer, undefined, enhancer);
+```
+
+使用`thunk`
+
+第一步：定义一个异步函数，返回值是一个函数
+
+```ts
+// 借助redux-thunk中间件定义异步action返回的是一个异步函数 该函数有一个参数 dispatch
+export const setIssuesAsync = () => {
+  // 返回一个函数
+  return async function (dispatch) {
+    // 处理完异步的请求
+    const res = await fetchIssues();
+    // 再dispatch
+    dispatch({
+    	type: "SET_ISSUES",
+    	payload,
+  	});
+  };
+};
+```
+
+第二步：dispatch这个函数的返回值
+
+```tsx
+  const dispatch = useAppDispatch();
+  useEffect(() => {
+    dispatch(setIssuesAsync());
+  }, []);
+```
+
+思考：setIssuesAsync()的返回值是一个函数，dispatch一个函数，这是什么操作？来看看`redux-thunk`中间件的源码
+
+<img src='./images/02/07.png'>
+
+用中文描述一下这段代码的逻辑：
+
+1. 如果 action 是个函数，就调用这个函数
+2. 如果 action 不是函数，就传给下一个中间件
+
+再简化一点就是：发现 action 是函数就调用它，返回一个action，并且传递 dispatch, getState, extraArgument 方法作为参数。这里的action里的dispatch也就是定义异步函数传入的dispatch。这样一来，我们就能在这个 function 里面处理异步逻辑，处理复杂逻辑。
+
+#### 分开管理开发环境和生产环境的中间件(基于vite)
+
+```ts
+// 判断当前是否为开发环境
+const isDev = import.meta.env.DEV;
+
+// 默认放置 开发环境和生产环境公用的中间件
+const middleware = [thunk]; // thunk异步状态更新中间件 为生产环境，直接放进去
+if (isDev) {
+  // 生成日志的中间件
+  const loggerMiddleWare = createLogger();
+  // 追加仅开发环境使用的中间件
+  middleware.push(loggerMiddleWare);
+}
+
+// 转化为增强器
+// const enhancer = applyMiddleware(loggerMiddleWare);
+const enhancer = applyMiddleware(...middleware);
+```
+
+
+
+
+
+
+
+
+
+
+
+
 
