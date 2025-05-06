@@ -127,7 +127,7 @@ export default function App() {
 
 这里的 import 是 webpack 提供的用来异步加载模块的 api，它会动态下载模块所在的 chunk，然后从中解析出该模块，拿到 export 的值：
 
-![截屏2025-05-06 09.04.27](./images/04/截屏2025-05-06 09.04.27-6493483-6493485.png)
+<img src='./images/04/截屏2025-05-06 09.04.27-6493483-6493485.png'>
 
 也可以结合路由一起使用：
 
@@ -210,9 +210,7 @@ class SimpleSuspense extends React.Component {
 
 回答这个问题会涉及到 ErrorBoundary。
 
-React组件的两种定义形式：类组件和函数组件（主流+官方推荐）。
-
-![截屏2025-05-06 09.09.57](./images/04/截屏2025-05-06 09.09.57.png)
+React组件的两种定义形式：类组件和函数组件（主流+官方推荐）。<img src='./images/04/截屏2025-05-06 09.09.57.png'>
 
 绝大多数情况我们用 function 组件就好了，没必要用 class 组件。
 
@@ -273,9 +271,7 @@ export default function App() {
 
 window.a.b 不存在，所以正常情况下会报错，页面白屏。
 
-但现在加上 ErrorBoundary 是这样的：
-
-![截屏2025-05-06 09.12.52](./images/04/截屏2025-05-06 09.12.52.png)
+但现在加上 ErrorBoundary 是这样的：<img src='./images/04/截屏2025-05-06 09.12.52.png'>
 
 getDerivedStateFromError 修改 state 触发重新渲染，渲染出错误对应的 UI。
 
@@ -283,9 +279,7 @@ componentDidCatch 拿到错误信息，打印日志。
 
 这样，就对组件抛错的情况做了兜底。
 
-这个特性只有 class 组件有，function 组件没有：
-
-![截屏2025-05-06 09.13.25](./images/04/截屏2025-05-06 09.13.25.png)
+这个特性只有 class 组件有，function 组件没有：<img src='./images/04/截屏2025-05-06 09.13.25.png'>
 
 不过一般也不用自己写这种 ErrorBoundary 组件，直接用 react-error-boundary 这个包就行：
 
@@ -322,9 +316,7 @@ export default function App() {
 }
 ```
 
-而且并不一定是 ErrorBoundary 的 children，任意层级的子组件都可以：
-
-![截屏2025-05-06 09.15.21](./images/04/截屏2025-05-06 09.15.21.png)
+而且并不一定是 ErrorBoundary 的 children，任意层级的子组件都可以：<img src='./images/04/截屏2025-05-06 09.15.21.png'>
 
 也就是说组件抛错的时候，会向上寻找最近的 ErrorBoundary 组件，这也是 boundary 的含义。
 
@@ -363,9 +355,7 @@ export default function App() {
 }
 ```
 
-可以看到，触发了 Suspense：
-
-![Kapture 2025-05-06 at 09.20.33](./images/04/Kapture 2025-05-06 at 09.20.33.gif)
+可以看到，触发了 Suspense：<img src='./images/04/Kapture 2025-05-06 at 09.20.33.gif'>
 
 
 
@@ -375,9 +365,7 @@ promise 初始状态展示 fallback，promise 改变状态后展示子组件。
 
 那 React.lazy 是不是也是基于这个实现的呢？
 
-调试下源码，发现确实是这样：
-
-![截屏2025-05-06 09.22.22](./images/04/截屏2025-05-06 09.22.22.png)
+调试下源码，发现确实是这样：<img src='./images/04/截屏2025-05-06 09.22.22.png'>
 
 React.lazy 包裹之后，也会 throw 一个 promise 来触发 Suspense。
 
@@ -385,27 +373,17 @@ React.lazy 包裹之后，也会 throw 一个 promise 来触发 Suspense。
 
 这样为什么 jotai 可以支持 Suspense 我们也就知道了：
 
-也是这样实现的：
-
-![截屏2025-05-06 09.23.25](./images/04/截屏2025-05-06 09.23.25.png)
+也是这样实现的：<img src='./images/04/截屏2025-05-06 09.23.25.png'>
 
 ErrorBoundary 是捕获组件 throw 的错误，而 Suspense 是捕获组件 throw 的 promise，这俩会冲突么？
 
-试一下就知道了：
+试一下就知道了：<img src='./images/04/截屏2025-05-06 09.27.07.png'>
 
-![截屏2025-05-06 09.27.07](./images/04/截屏2025-05-06 09.27.07.png)
+包裹一层 ErrorBoundary，你会发现没有触发：<img src='./images/04/Kapture 2025-05-06 at 09.27.44.gif'>
 
-包裹一层 ErrorBoundary，你会发现没有触发：
+而 throw 一个 error 的时候：<img src='./images/04/截屏2025-05-06 09.28.39.png'>
 
-![Kapture 2025-05-06 at 09.27.44](./images/04/Kapture 2025-05-06 at 09.27.44.gif) 
-
-而 throw 一个 error 的时候：
-
-![截屏2025-05-06 09.28.39](./images/04/截屏2025-05-06 09.28.39.png)
-
-ErrorBoundary 就触发了：
-
-![截屏2025-05-06 09.29.10](./images/04/截屏2025-05-06 09.29.10.png)
+ErrorBoundary 就触发了：<img src='./images/04/截屏2025-05-06 09.29.10.png'>
 
 
 
@@ -467,13 +445,9 @@ export default function App() {
 
 本来 Suspense 就是用来做这个的，结果现在只有 lazy 加载异步组件的时候才能用。
 
-react 团队也在想办法解决这个问题，所以出了一个 use 的 hook：
+react 团队也在想办法解决这个问题，所以出了一个 use 的 hook：<img src='./images/04/截屏2025-05-06 09.35.27.png'>
 
-![截屏2025-05-06 09.35.27](./images/04/截屏2025-05-06 09.35.27.png)
-
-这样用：
-
-![截屏2025-05-06 09.36.21](./images/04/截屏2025-05-06 09.36.21.png)
+这样用：<img src='./images/04/截屏2025-05-06 09.36.21.png'>
 
 它的参数是 promise。
 
@@ -483,7 +457,7 @@ react 团队也在想办法解决这个问题，所以出了一个 use 的 hook�
 
 当 promise 是 reject 的时候，展示 ErrorBoundary 的 fallback。
 
-![截屏2025-05-06 09.37.02](./images/04/截屏2025-05-06 09.37.02.png)
+<img src='./images/04/截屏2025-05-06 09.37.02.png'>
 
 这样就不用自己 throw promise 了，业务代码就可以用 Suspense 来 loading 了。
 
@@ -491,7 +465,7 @@ react 团队也在想办法解决这个问题，所以出了一个 use 的 hook�
 
 这就是文档里写的触发 Suspense 的 3 种方式：
 
-![截屏2025-05-06 09.37.45](./images/04/截屏2025-05-06 09.37.45.png)
+<img src='./images/04/截屏2025-05-06 09.37.45.png'>
 
 一种是用支持 Suspense 的框架，比如 next.js 或者 jotai。
 
